@@ -68,3 +68,4 @@ dkms.conf
 /configure
 /libtool
 /libzcashconsensus.pc
+wallet-utility

@@ -1,3 +1,9 @@
+koto (1.0.14) stable; urgency=medium
+
+  * 1.0.14-bitcore release.
+
+ -- WO <wo@kotocoin.info>  Fri, 23 Feb 2018 15:48:00 +0900
+
 zcash (1.0.14) stable; urgency=medium
 
   * 1.0.14 release.
