@@ -793,6 +793,85 @@ index 0000000..289c81b
 +
 +if __name__ == '__main__':
 +    TimestampIndexTest().main()
+diff --git a/qa/rpc-tests/txindex.py b/qa/rpc-tests/txindex.py
+new file mode 100644
+index 0000000..b139253
+--- /dev/null
++++ b/qa/rpc-tests/txindex.py
+@@ -0,0 +1,73 @@
++#!/usr/bin/env python2
++# Copyright (c) 2014-2015 The Bitcoin Core developers
++# Distributed under the MIT software license, see the accompanying
++# file COPYING or http://www.opensource.org/licenses/mit-license.php.
++
++#
++# Test txindex generation and fetching
++#
++
++import time
++from test_framework.test_framework import BitcoinTestFramework
++from test_framework.util import *
++from test_framework.script import *
++from test_framework.mininode import *
++import binascii
++
++class TxIndexTest(BitcoinTestFramework):
++
++    def setup_chain(self):
++        print("Initializing test directory "+self.options.tmpdir)
++        initialize_chain_clean(self.options.tmpdir, 4)
++
++    def setup_network(self):
++        self.nodes = []
++        # Nodes 0/1 are "wallet" nodes
++        self.nodes.append(start_node(0, self.options.tmpdir, ["-debug"]))
++        self.nodes.append(start_node(1, self.options.tmpdir, ["-debug", "-txindex"]))
++        # Nodes 2/3 are used for testing
++        self.nodes.append(start_node(2, self.options.tmpdir, ["-debug", "-txindex"]))
++        self.nodes.append(start_node(3, self.options.tmpdir, ["-debug", "-txindex"]))
++        connect_nodes(self.nodes[0], 1)
++        connect_nodes(self.nodes[0], 2)
++        connect_nodes(self.nodes[0], 3)
++
++        self.is_network_split = False
++        self.sync_all()
++
++    def run_test(self):
++        print "Mining blocks..."
++        self.nodes[0].generate(105)
++        self.sync_all()
++
++        chain_height = self.nodes[1].getblockcount()
++        assert_equal(chain_height, 105)
++
++        print "Testing transaction index..."
++
++        privkey = "cSdkPxkAjA4HDr5VHgsebAPDEh9Gyub4HK8UJr2DFGGqKKy4K5sG"
++        address = "mgY65WSfEmsyYaYPQaXhmXMeBhwp4EcsQW"
++        addressHash = "0b2f0a0c31bfe0406b0ccc1381fdbe311946dadc".decode("hex")
++        scriptPubKey = CScript([OP_DUP, OP_HASH160, addressHash, OP_EQUALVERIFY, OP_CHECKSIG])
++        unspent = self.nodes[0].listunspent()
++        tx = CTransaction()
++        amount = unspent[0]["amount"] * 100000000
++        tx.vin = [CTxIn(COutPoint(int(unspent[0]["txid"], 16), unspent[0]["vout"]))]
++        tx.vout = [CTxOut(amount, scriptPubKey)]
++        tx.rehash()
++
++        signed_tx = self.nodes[0].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
++        txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True)
++        self.nodes[0].generate(1)
++        self.sync_all()
++
++        # Check verbose raw transaction results
++        verbose = self.nodes[3].getrawtransaction(unspent[0]["txid"], 1)
++        assert_equal(verbose["vout"][0]["valueSat"], 5000000000);
++        assert_equal(verbose["vout"][0]["value"], 50);
++
++        print "Passed\n"
++
++
++if __name__ == '__main__':
++    TxIndexTest().main()
 diff --git a/src/Makefile.am b/src/Makefile.am
 index 9a48556..8edb67d 100644
 --- a/src/Makefile.am
@@ -3648,3 +3727,348 @@ index 6b6434f..668c7a0 100644
      void remove(const CTransaction &tx, std::list<CTransaction>& removed, bool fRecursive = false);
      void removeWithAnchor(const uint256 &invalidRoot);
      void removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMemPoolHeight, int flags);
+diff --git a/src/wallet-utility.cpp b/src/wallet-utility.cpp
+new file mode 100644
+index 0000000..87335f4
+--- /dev/null
++++ b/src/wallet-utility.cpp
+@@ -0,0 +1,339 @@
++#include <iostream>
++#include <string>
++
++// Include local headers
++#include "wallet/walletdb.h"
++#include "util.h"
++#include "base58.h"
++#include "wallet/crypter.h"
++#include <boost/foreach.hpp>
++
++
++void show_help()
++{
++    std::cout <<
++        "This program outputs Bitcoin addresses and private keys from a wallet.dat file" << std::endl
++        << std::endl
++        << "Usage and options: "
++        << std::endl
++        << " -datadir=<directory> to tell the program where your wallet is"
++        << std::endl
++        << " -wallet=<name> (Optional) if your wallet is not named wallet.dat"
++        << std::endl
++        << " -regtest or -testnet (Optional) dumps addresses from regtest/testnet"
++        << std::endl
++        << " -dumppass (Optional)if you want to extract private keys associated with addresses"
++        << std::endl
++        << "    -pass=<walletpassphrase> if you have encrypted private keys stored in your wallet"
++        << std::endl;
++}
++
++
++class WalletUtilityDB : public CDB
++{
++    private:
++        typedef std::map<unsigned int, CMasterKey> MasterKeyMap;
++        MasterKeyMap mapMasterKeys;
++        unsigned int nMasterKeyMaxID;
++        SecureString mPass;
++        std::vector<CKeyingMaterial> vMKeys;
++
++    public:
++        WalletUtilityDB(const std::string& strFilename, const char* pszMode = "r+", bool fFlushOnClose = true) : CDB(strFilename, pszMode, fFlushOnClose)
++    {
++        nMasterKeyMaxID = 0;
++        mPass.reserve(100);
++    }
++
++        std::string getAddress(CDataStream ssKey);
++        std::string getKey(CDataStream ssKey, CDataStream ssValue);
++        std::string getCryptedKey(CDataStream ssKey, CDataStream ssValue, std::string masterPass);
++        bool updateMasterKeys(CDataStream ssKey, CDataStream ssValue);
++        bool parseKeys(bool dumppriv, std::string masterPass);
++
++        bool DecryptSecret(const std::vector<unsigned char>& vchCiphertext, const uint256& nIV, CKeyingMaterial& vchPlaintext);
++        bool Unlock();
++        bool DecryptKey(const std::vector<unsigned char>& vchCryptedSecret, const CPubKey& vchPubKey, CKey& key);
++};
++
++
++/*
++ * Address from a public key in base58
++ */
++std::string WalletUtilityDB::getAddress(CDataStream ssKey)
++{
++    CPubKey vchPubKey;
++    ssKey >> vchPubKey;
++    CKeyID id = vchPubKey.GetID();
++    std::string strAddr = CBitcoinAddress(id).ToString();
++
++    return strAddr;
++}
++
++
++/*
++ * Non encrypted private key in WIF
++ */
++std::string WalletUtilityDB::getKey(CDataStream ssKey, CDataStream ssValue)
++{
++    std::string strKey;
++    CPubKey vchPubKey;
++    ssKey >> vchPubKey;
++    CPrivKey pkey;
++    CKey key;
++
++    ssValue >> pkey;
++    if (key.Load(pkey, vchPubKey, true))
++        strKey = CBitcoinSecret(key).ToString();
++
++    return strKey;
++}
++
++
++bool WalletUtilityDB::DecryptSecret(const std::vector<unsigned char>& vchCiphertext, const uint256& nIV, CKeyingMaterial& vchPlaintext)
++{
++    CCrypter cKeyCrypter;
++    std::vector<unsigned char> chIV(WALLET_CRYPTO_KEY_SIZE);
++    memcpy(&chIV[0], &nIV, WALLET_CRYPTO_KEY_SIZE);
++
++    BOOST_FOREACH(const CKeyingMaterial vMKey, vMKeys)
++    {
++        if(!cKeyCrypter.SetKey(vMKey, chIV))
++            continue;
++        if (cKeyCrypter.Decrypt(vchCiphertext, *((CKeyingMaterial*)&vchPlaintext)))
++            return true;
++    }
++    return false;
++}
++
++
++bool WalletUtilityDB::Unlock()
++{
++    CCrypter crypter;
++    CKeyingMaterial vMasterKey;
++
++    BOOST_FOREACH(const MasterKeyMap::value_type& pMasterKey, mapMasterKeys)
++    {
++        if(!crypter.SetKeyFromPassphrase(mPass, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod))
++            return false;
++        if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, vMasterKey))
++            continue; // try another master key
++        vMKeys.push_back(vMasterKey);
++    }
++    return true;
++}
++
++
++bool WalletUtilityDB::DecryptKey(const std::vector<unsigned char>& vchCryptedSecret, const CPubKey& vchPubKey, CKey& key)
++{
++    CKeyingMaterial vchSecret;
++    if(!DecryptSecret(vchCryptedSecret, vchPubKey.GetHash(), vchSecret))
++        return false;
++
++    if (vchSecret.size() != 32)
++        return false;
++
++    key.Set(vchSecret.begin(), vchSecret.end(), vchPubKey.IsCompressed());
++    return true;
++}
++
++
++/*
++ * Encrypted private key in WIF format
++ */
++std::string WalletUtilityDB::getCryptedKey(CDataStream ssKey, CDataStream ssValue, std::string masterPass)
++{
++    mPass = masterPass.c_str();
++    CPubKey vchPubKey;
++    ssKey >> vchPubKey;
++    CKey key;
++
++    std::vector<unsigned char> vKey;
++    ssValue >> vKey;
++
++    if (!Unlock())
++        return "";
++
++    if(!DecryptKey(vKey, vchPubKey, key))
++        return "";
++
++    std::string strKey = CBitcoinSecret(key).ToString();
++    return strKey;
++}
++
++
++/*
++ * Master key derivation
++ */
++bool WalletUtilityDB::updateMasterKeys(CDataStream ssKey, CDataStream ssValue)
++{
++    unsigned int nID;
++    ssKey >> nID;
++    CMasterKey kMasterKey;
++    ssValue >> kMasterKey;
++    if (mapMasterKeys.count(nID) != 0)
++    {
++        std::cout << "Error reading wallet database: duplicate CMasterKey id " << nID << std::endl;
++        return false;
++    }
++    mapMasterKeys[nID] = kMasterKey;
++
++    if (nMasterKeyMaxID < nID)
++        nMasterKeyMaxID = nID;
++
++    return true;
++}
++
++
++/*
++ * Look at all the records and parse keys for addresses and private keys
++ */
++bool WalletUtilityDB::parseKeys(bool dumppriv, std::string masterPass)
++{
++    DBErrors result = DB_LOAD_OK;
++    std::string strType;
++    bool first = true;
++
++    try {
++        Dbc* pcursor = GetCursor();
++        if (!pcursor)
++        {
++            LogPrintf("Error getting wallet database cursor\n");
++            result = DB_CORRUPT;
++        }
++
++        if (dumppriv)
++        {
++            while (result == DB_LOAD_OK && true)
++            {
++                CDataStream ssKey(SER_DISK, CLIENT_VERSION);
++                CDataStream ssValue(SER_DISK, CLIENT_VERSION);
++                int result = ReadAtCursor(pcursor, ssKey, ssValue);
++
++                if (result == DB_NOTFOUND) {
++                    break;
++                }
++                else if (result != 0)
++                {
++                    LogPrintf("Error reading next record from wallet database\n");
++                    result = DB_CORRUPT;
++                    break;
++                }
++
++                ssKey >> strType;
++                if (strType == "mkey")
++                {
++                    updateMasterKeys(ssKey, ssValue);
++                }
++            }
++            pcursor->close();
++            pcursor = GetCursor();
++        }
++
++        while (result == DB_LOAD_OK && true)
++        {
++            CDataStream ssKey(SER_DISK, CLIENT_VERSION);
++            CDataStream ssValue(SER_DISK, CLIENT_VERSION);
++            int ret = ReadAtCursor(pcursor, ssKey, ssValue);
++
++            if (ret == DB_NOTFOUND)
++            {
++                std::cout << " ]" << std::endl;
++                first = true;
++                break;
++            }
++            else if (ret != DB_LOAD_OK)
++            {
++                LogPrintf("Error reading next record from wallet database\n");
++                result = DB_CORRUPT;
++                break;
++            }
++
++            ssKey >> strType;
++
++            if (strType == "key" || strType == "ckey")
++            {
++                std::string strAddr = getAddress(ssKey);
++                std::string strKey = "";
++
++
++                if (dumppriv && strType == "key")
++                    strKey = getKey(ssKey, ssValue);
++                if (dumppriv && strType == "ckey")
++                {
++                    if (masterPass == "")
++                    {
++                        std::cout << "Encrypted wallet, please provide a password. See help below" << std::endl;
++                        show_help();
++                        result = DB_LOAD_FAIL;
++                        break;
++                    }
++                    strKey = getCryptedKey(ssKey, ssValue, masterPass);
++                }
++
++                if (strAddr != "")
++                {
++                    if (first)
++                        std::cout << "[ ";
++                    else
++                        std::cout << ", ";
++                }
++
++                if (dumppriv)
++                {
++                    std::cout << "{\"addr\" : \"" + strAddr + "\", "
++                        << "\"pkey\" : \"" + strKey + "\"}"
++                        << std::flush;
++                }
++                else
++                {
++                    std::cout << "\"" + strAddr + "\"";
++                }
++
++                first = false;
++            }
++        }
++
++        pcursor->close();
++    } catch (DbException &e) {
++        std::cout << "DBException caught " << e.get_errno() << std::endl;
++    } catch (std::exception &e) {
++        std::cout << "Exception caught " << std::endl;
++    }
++
++    if (result == DB_LOAD_OK)
++        return true;
++    else
++        return false;
++}
++
++
++int main(int argc, char* argv[])
++{
++    ParseParameters(argc, argv);
++    std::string walletFile = GetArg("-wallet", "wallet.dat");
++    std::string masterPass = GetArg("-pass", "");
++    bool fDumpPass = GetBoolArg("-dumppass", false);
++    bool help = GetBoolArg("-h", false);
++    bool result = false;
++
++    if (help)
++    {
++        show_help();
++        return 0;
++    }
++
++    try {
++        SelectParamsFromCommandLine();
++        result = WalletUtilityDB(walletFile, "r").parseKeys(fDumpPass, masterPass);
++    }
++    catch (const std::exception& e) {
++        std::cout << "Error opening wallet file " << walletFile << std::endl;
++        std::cout << e.what() << std::endl;
++    }
++
++    if (result)
++        return 0;
++    else
++        return -1;
++}
