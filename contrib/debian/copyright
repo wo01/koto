@@ -1,7 +1,7 @@
 Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?rev=174
 Upstream-Name: Koto
 Upstream-Contact: The Koto Developers
-Source: https://github.com/koto-dev/koto
+Source: https://github.com/KotoDevelopers/koto
 
 Files: *
 Copyright: 2017, The Koto developers
@@ -10,7 +10,7 @@ Copyright: 2017, The Koto developers
 License: Expat
 Comment: The Bitcoin Core developers encompasses the current developers listed on bitcoin.org,
  as well as the numerous contributors to the project.
- The Koto developers are listed at https://github.com/koto-dev/wiki/blob/master/KotoCoreMember.md.
+ The Koto developers are listed at https://github.com/KotoDevelopers/wiki/blob/master/KotoCoreMember.md.
 
 Files: depends/sources/libsodium-*.tar.gz
 Copyright: 2013-2016 Frank Denis
