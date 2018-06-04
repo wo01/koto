@@ -2361,6 +2361,29 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                                block.vtx[0].GetValueOut(), blockReward),
                                REJECT_INVALID, "bad-cb-amount");
 
+    //
+    // Koto Developer Fee
+    //
+    int nActivationHeight = chainparams.GetConsensus().vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight;
+    if (nActivationHeight != Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT &&
+        (pindex->nHeight >= nActivationHeight) && (pindex->nHeight <= chainparams.GetConsensus().GetLastFoundersRewardBlockHeight())) {
+        bool found = false;
+
+        CAmount nDevFees = nFees * chainparams.GetConsensus().nFoundersRewardTxPercentage / 100;
+
+        BOOST_FOREACH(const CTxOut& output, block.vtx[0].vout) {
+            if (output.scriptPubKey == Params().GetFoundersRewardScriptAtHeight(pindex->nHeight)) {
+                if (output.nValue == (GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus()) * chainparams.GetConsensus().nFoundersRewardPercentage / 100) + nDevFees) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            return state.DoS(100, error("%s: founders fee reward missing", __func__), REJECT_INVALID, "cb-no-founders-fee-reward");
+        }
+    }
+
     if (!control.Wait())
         return state.DoS(100, false);
     int64_t nTime2 = GetTimeMicros(); nTimeVerify += nTime2 - nTimeStart;
@@ -3370,21 +3393,9 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
         (nHeight >= nActivationHeight) && (nHeight <= consensusParams.GetLastFoundersRewardBlockHeight())) {
         bool found = false;
 
-        CAmount nFees = 0;
-        BOOST_FOREACH(const CTransaction& tx, block.vtx) {
-            if (!tx.IsCoinBase()) {
-                CCoinsViewCache view(pcoinsTip);
-                if (view.HaveInputs(tx)) {
-                    CAmount nTxFees = view.GetValueIn(tx)-tx.GetValueOut();
-                    nFees += nTxFees;
-                }
-            }
-        }
-        nFees = nFees * consensusParams.nFoundersRewardTxPercentage / 100;
-
         BOOST_FOREACH(const CTxOut& output, block.vtx[0].vout) {
             if (output.scriptPubKey == Params().GetFoundersRewardScriptAtHeight(nHeight)) {
-                if (output.nValue == (GetBlockSubsidy(nHeight, consensusParams) * consensusParams.nFoundersRewardPercentage / 100) + nFees) {
+                if (output.nValue >= (GetBlockSubsidy(nHeight, consensusParams) * consensusParams.nFoundersRewardPercentage / 100)) {
                     found = true;
                     break;
                 }
