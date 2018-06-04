@@ -21,7 +21,7 @@ index a160fe5..f9a0f68 100644
  
  baseline.info:
 diff --git a/configure.ac b/configure.ac
-index 44ea98c..6352380 100644
+index b2b36fc..363c3e6 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -218,7 +218,7 @@ CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
@@ -1095,37 +1095,6 @@ index 24e7abf..73e1c4d 100644
      bool IsScript() const;
  };
  
-diff --git a/src/chainparams.cpp b/src/chainparams.cpp
-index 3330b93..90aa0f9 100644
---- a/src/chainparams.cpp
-+++ b/src/chainparams.cpp
-@@ -258,7 +258,7 @@ public:
- 
- 	// Founders reward script expects a vector of multisig addresses
- 	vFoundersRewardAddress = {
--            ""
-+            "k2A4ArX2YAQJ6Qiut7tNNWUhq3Np7Et525K"
- 	};
- 	assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
-     }
-@@ -338,7 +338,7 @@ public:
-         base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAC,0x0C};
-         base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
- 	// Founders reward script expects a vector of multisig addresses
--	vFoundersRewardAddress = { "" };
-+	vFoundersRewardAddress = { "k2A4ArX2YAQJ6Qiut7tNNWUhq3Np7Et525K" };
- 	assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
-     }
- 
-@@ -412,7 +412,7 @@ CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
-     assert(nHeight > 0 && nHeight <= consensus.GetLastFoundersRewardBlockHeight());
- 
-     CBitcoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
--    assert(address.IsValid());
-+//    assert(address.IsValid());
-     assert(address.IsScript());
-     CScriptID scriptID = boost::get<CScriptID>(address.Get()); // Get() returns a boost variant
-     CScript script = CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
 diff --git a/src/dbwrapper.cpp b/src/dbwrapper.cpp
 index b34be5a..3df99cc 100644
 --- a/src/dbwrapper.cpp
@@ -1239,7 +1208,7 @@ index a5b1383..f5ee60e 100644
                  pcoinscatcher = new CCoinsViewErrorCatcher(pcoinsdbview);
                  pcoinsTip = new CCoinsViewCache(pcoinscatcher);
 diff --git a/src/main.cpp b/src/main.cpp
-index c27732c..45fc487 100644
+index d02ccf8..8043e3a 100644
 --- a/src/main.cpp
 +++ b/src/main.cpp
 @@ -63,6 +63,9 @@ bool fExperimentalMode = false;
@@ -1535,7 +1504,7 @@ index c27732c..45fc487 100644
          CTxUndo undoDummy;
          if (i > 0) {
              blockundo.vtxundo.push_back(CTxUndo());
-@@ -2403,6 +2614,41 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
+@@ -2426,6 +2637,41 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
          if (!pblocktree->WriteTxIndex(vPos))
              return AbortNode(state, "Failed to write transaction index");
  
@@ -1577,7 +1546,7 @@ index c27732c..45fc487 100644
      // add this block to the view's block chain
      view.SetBestBlock(pindex->GetBlockHash());
  
-@@ -3863,6 +4109,18 @@ bool static LoadBlockIndexDB()
+@@ -3876,6 +4122,18 @@ bool static LoadBlockIndexDB()
      pblocktree->ReadFlag("txindex", fTxIndex);
      LogPrintf("%s: transaction index %s\n", __func__, fTxIndex ? "enabled" : "disabled");
  
@@ -1596,7 +1565,7 @@ index c27732c..45fc487 100644
      // Fill in-memory data
      BOOST_FOREACH(const PAIRTYPE(uint256, CBlockIndex*)& item, mapBlockIndex)
      {
-@@ -4174,6 +4432,18 @@ bool InitBlockIndex() {
+@@ -4187,6 +4445,18 @@ bool InitBlockIndex() {
      // Use the provided setting for -txindex in the new database
      fTxIndex = GetBoolArg("-txindex", false);
      pblocktree->WriteFlag("txindex", fTxIndex);
