@@ -3,8 +3,8 @@
 SET kotodir=%appdata%\Koto
 SET kotoconf=%kotodir%\koto.conf
 SET sproutdir=%appdata%\ZcashParams
-SET sprout-proving_url=http://d.koto.cash/sprout-proving.key?a=.js
-SET sprout-verifying_url=http://d.koto.cash/sprout-verifying.key?a=.js
+SET sprout-proving_url=http://dl.ko-to.org:8080/sprout-proving.key?a=.js
+SET sprout-verifying_url=http://dl.ko-to.org:8080/sprout-verifying.key?a=.js
 SET sprout-proving=%sproutdir%\sprout-proving.key
 SET sprout-verifying=%sproutdir%\sprout-verifying.key
 SET sprout-proving-hash=8bc20a7f013b2b58970cddd2e7ea028975c88ae7ceb9259a5344a16bc2c0eef7

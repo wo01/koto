@@ -41,7 +41,7 @@ if [ -e ~/Library/Application\ Support/ZcashParams/sprout-verifying.key ]; then
 else 
     echo
     echo download sprout-verifying.key
-  curl -O -# http://d.koto.cash/sprout-verifying.key
+  curl -O -# http://dl.ko-to.org:8080/sprout-verifying.key
 fi
 
 if [ -e ~/Library/Application\ Support/ZcashParams/sprout-proving.key ]; then
@@ -50,7 +50,7 @@ if [ -e ~/Library/Application\ Support/ZcashParams/sprout-proving.key ]; then
 else 
     echo
     echo download sprout-proving.key
-  curl -O -# http://d.koto.cash/sprout-proving.key
+  curl -O -# http://dl.ko-to.org:8080/sprout-proving.key
 fi
 
 # /kotoフォルダを開く -----------------------
