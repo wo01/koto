@@ -4,7 +4,7 @@ Koto 1.1.0
 What is Koto?
 --------------
 
-[Koto](https://koto.cash/) is fork of Zcash.
+[Koto](https://ko-to.org/) is fork of Zcash.
 Based on Bitcoin's code, it intends to offer a far higher standard of privacy
 through a sophisticated zero-knowledge proving scheme that preserves
 confidentiality of transaction metadata. Technical details are available
@@ -40,7 +40,7 @@ https://github.com/zcash/zcash/wiki/1.0-User-Guide
 
 * See the documentation at the [Koto Wiki](https://github.com/KotoDevelopers/wiki/wiki)
   for help and more information.
-* Ask for help on the [Koto](https://discourse.koto.cash/) forum.
+* Ask for help on the [Koto](https://discourse.ko-to.org/) forum.
 
 Participation in the Koto project is subject to a
 [Code of Conduct](code_of_conduct.md).
