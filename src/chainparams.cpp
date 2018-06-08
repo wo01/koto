@@ -156,12 +156,15 @@ public:
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
             ( 0, consensus.hashGenesisBlock)
-            (77500, uint256S("0x8ed5cf1de772152f15cb392fd5e686796f77c08386eba922cbe109d4df96381a")),
-            1517808798,     // * UNIX timestamp of last checkpoint block
-            192419,         // * total number of transactions between genesis and last checkpoint
+            (77500, uint256S("0x8ed5cf1de772152f15cb392fd5e686796f77c08386eba922cbe109d4df96381a"))
+            (150000, uint256S("0x31d1e2c5aa0a4ece690cb68912ddce8db49f837919bf141e163135dc95ae2bc4"))
+            (200000, uint256S("0x134c68f3769274f2757fa32795c0cc9aa2fbf18b47ac3670e57652721011d3b4"))
+            (250000, uint256S("0x5c8d462b6ad46befcc02e50bf8c8ed025e5e8ae41128459f4ab44a265017b055")),
+            1528204155,     // * UNIX timestamp of last checkpoint block
+            872908,         // * total number of transactions between genesis and last checkpoint
                             //   (the tx=... number in the SetBestChain debug.log lines)
-            1430            // * estimated number of transactions per day after checkpoint
-                            //   total number of tx / (checkpoint block height / (24 * 24))
+            5208            // * estimated number of transactions per day after checkpoint
+                            //   total number of tx / (checkpoint block height / (24 * 60))
         };
 
 	// Founders reward script expects a vector of 2-of-3 multisig addresses
@@ -250,10 +253,11 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            ( 0, consensus.hashGenesisBlock),
-            genesis.nTime,
-            0,
-            0
+            ( 0, consensus.hashGenesisBlock)
+            (85000, uint256S("0xf1b07e23116246700d5ad5e12a1105f02faa6b9d952fac8da5e2bb299b86372e")),
+            1526264849,
+            86482,
+            1465
         };
 
 	// Founders reward script expects a vector of multisig addresses
