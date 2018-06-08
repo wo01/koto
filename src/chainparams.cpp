@@ -225,7 +225,8 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("testnet.kotocoin.info", "dnsseed.testnet.kotocoin.info"));
+        vSeeds.push_back(CDNSSeedData("ko-to.org", "testnet.ko-to.org"));
+        vSeeds.push_back(CDNSSeedData("kotocoin.info", "dnsseed.testnet.kotocoin.info"));
 
         // guarantees the first 2 characters, when base58 encoded, are "km"
         base58Prefixes[PUBKEY_ADDRESS]     = {0x18,0xA4};
