@@ -18,6 +18,7 @@ ant -buildfile src/build/build.xml
 cd ..
 
 mkdir -p $ZIPDIR
+mkdir -p $ZIPDIR/koto-bin
 
 cp -r ../mac/* $ZIPDIR
 cp koto-swing-wallet-ui/build/jars/KotoSwingWalletUI.jar $ZIPDIR/KotoWallet.app/Contents/MacOS
