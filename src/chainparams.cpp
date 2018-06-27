@@ -169,7 +169,7 @@ public:
 
 	// Founders reward script expects a vector of 2-of-3 multisig addresses
 	vFoundersRewardAddress = {
-	    ""
+	    "k3EEgqMM8jpaGW6XXUHpv3kDprMfm1x1VEf"
 	};
 	assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
     }
