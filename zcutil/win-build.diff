@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index 9912432..6413e31 100644
+index b2b36fc..4508633 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -483,8 +483,9 @@ if test x$use_hardening != xno; then
@@ -217,15 +217,30 @@ index 32abce2..0fdb331 100644
      PaymentDisclosureDBTest mydb(pathTemp);
  
 diff --git a/src/metrics.cpp b/src/metrics.cpp
-index b9fdfc5..935fb19 100644
+index b9fdfc5..addf0d1 100644
 --- a/src/metrics.cpp
 +++ b/src/metrics.cpp
-@@ -430,6 +430,30 @@ void setCursorPosition(int x, int y)
- }
- #endif
+@@ -19,7 +19,6 @@
  
-+#ifdef WIN32
+ #ifdef WIN32
+ #include <io.h>
+-#include <windows.h>
+ #else
+ #include <sys/ioctl.h>
+ #endif
+@@ -421,6 +420,8 @@ int printInitMessage()
+ }
+ 
+ #ifdef WIN32
 +#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
++
+ void setCursorPosition(int x, int y)
+ {
+     static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+@@ -428,6 +429,26 @@ void setCursorPosition(int x, int y)
+     COORD coord = { (SHORT)x, (SHORT)y };
+     SetConsoleCursorPosition(hOut, coord);
+ }
 +
 +bool enableVTMode()
 +{
@@ -246,23 +261,79 @@ index b9fdfc5..935fb19 100644
 +    }
 +    return true;
 +}
-+#endif
-+
+ #endif
+ 
  void ThreadShowMetricsScreen()
- {
+@@ -435,23 +456,18 @@ void ThreadShowMetricsScreen()
      // Make this thread recognisable as the metrics screen thread
-@@ -445,6 +469,10 @@ void ThreadShowMetricsScreen()
+     RenameThread("koto-metrics-screen");
+ 
+-#ifdef WIN32
+-    bool clearedAfterLoaded = false;
+-#endif
+-
+     // Determine whether we should render a persistent UI or rolling metrics
+     bool isTTY = isatty(STDOUT_FILENO);
+     bool isScreen = GetBoolArg("-metricsui", isTTY);
      int64_t nRefresh = GetArg("-metricsrefreshtime", isTTY ? 1 : 600);
  
      if (isScreen) {
-+#ifdef WIN32
-+        enableVTMode();
-+#endif
-+
-         // Clear screen
+-        // Clear screen
  #ifdef WIN32
-         setCursorPosition(0, 0);
-@@ -528,7 +556,13 @@ void ThreadShowMetricsScreen()
+-        setCursorPosition(0, 0);
+-#else
+-        std::cout << "\e[2J";
++        enableVTMode();
+ #endif
+ 
++        std::cout << "\e[2J";
++
+         // Print art
+         std::cout << METRICS_ART << std::endl;
+         std::cout << std::endl;
+@@ -474,9 +490,9 @@ void ThreadShowMetricsScreen()
+         if (isTTY) {
+ 
+ #ifdef WIN32
+-        CONSOLE_SCREEN_BUFFER_INFO csbi;
+-        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+-        cols = csbi.srWindow.Right - csbi.srWindow.Left + 1;
++            CONSOLE_SCREEN_BUFFER_INFO csbi;
++            GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
++            cols = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+ #else
+             struct winsize w;
+             w.ws_col = 0;
+@@ -487,28 +503,8 @@ void ThreadShowMetricsScreen()
+         }
+ 
+         if (isScreen) {
+-#ifdef WIN32
+-        setCursorPosition(0, 12);
+-        if (loaded)
+-        {
+-           if (!clearedAfterLoaded)
+-           {
+-              std::cout << std::string(cols, ' ');
+-              std::cout << std::string(cols, ' ');
+-              std::cout << std::string(cols, ' ');
+-              std::cout << std::string(cols, ' ');
+-              std::cout << std::string(cols, ' ');
+-              std::cout << std::string(cols, ' ');
+-              std::cout << std::string(cols, ' ');
+-              std::cout << std::string(cols, ' ');
+-              setCursorPosition(0, 12);
+-           }
+-           clearedAfterLoaded=true;
+-        }
+-#else
+             // Erase below current position
+             std::cout << "\e[J";
+-#endif
+         }
+ 
+         // Miner status
+@@ -528,7 +524,13 @@ void ThreadShowMetricsScreen()
  
          if (isScreen) {
              // Explain how to exit
@@ -277,6 +348,18 @@ index b9fdfc5..935fb19 100644
          } else {
              // Print delineator
              std::cout << "----------------------------------------" << std::endl;
+@@ -542,11 +544,7 @@ void ThreadShowMetricsScreen()
+ 
+         if (isScreen) {
+             // Return to the top of the updating section
+-#ifdef WIN32
+-            setCursorPosition(0, 12);
+-#else
+             std::cout << "\e[" << lines << "A";
+-#endif
+         }
+     }
+ }
 diff --git a/src/snark/libsnark/algebra/curves/alt_bn128/alt_bn128_g1.cpp b/src/snark/libsnark/algebra/curves/alt_bn128/alt_bn128_g1.cpp
 index bf7f43d..2c62060 100644
 --- a/src/snark/libsnark/algebra/curves/alt_bn128/alt_bn128_g1.cpp
@@ -500,7 +583,7 @@ index 50f78b7..dc47a7e 100644
      bool test_bit(const std::size_t bitno) const;
  
 diff --git a/src/snark/libsnark/algebra/fields/bigint.tcc b/src/snark/libsnark/algebra/fields/bigint.tcc
-index 81befd9..dfd5758 100644
+index 81befd9..29608cd 100644
 --- a/src/snark/libsnark/algebra/fields/bigint.tcc
 +++ b/src/snark/libsnark/algebra/fields/bigint.tcc
 @@ -17,9 +17,9 @@
@@ -533,7 +616,15 @@ index 81befd9..dfd5758 100644
      {
          mp_limb_t x = this->data[i];
          if (x == 0)
-@@ -131,7 +131,7 @@ size_t bigint<n>::num_bits() const
+@@ -124,14 +124,14 @@ size_t bigint<n>::num_bits() const
+         }
+         else
+         {
+-            return ((i+1) * GMP_NUMB_BITS) - __builtin_clzl(x);
++            return ((i+1) * GMP_NUMB_BITS) - __builtin_clzll(x);
+         }
+     }
+     return 0;
  }
  
  template<mp_size_t n>
