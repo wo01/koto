@@ -91,7 +91,7 @@ void checkNumberOfUniqueAddresses(int nUnique) {
     int maxHeight = Params().GetConsensus().GetLastFoundersRewardBlockHeight();
     std::set<std::string> addresses;
     for (int i = 1; i <= maxHeight; i++) {
-//        addresses.insert(Params().GetFoundersRewardAddressAtHeight(i));
+        addresses.insert(Params().GetFoundersRewardAddressAtHeight(i));
     }
     ASSERT_TRUE(addresses.size() == nUnique);
 }
@@ -105,7 +105,7 @@ TEST(founders_reward_test, general) {
 }
 
 
-#define NUM_MAINNET_FOUNDER_ADDRESSES 48
+#define NUM_MAINNET_FOUNDER_ADDRESSES 1
 
 TEST(founders_reward_test, mainnet) {
     SelectParams(CBaseChainParams::MAIN);
@@ -113,7 +113,7 @@ TEST(founders_reward_test, mainnet) {
 }
 
 
-#define NUM_TESTNET_FOUNDER_ADDRESSES 48
+#define NUM_TESTNET_FOUNDER_ADDRESSES 1
 
 TEST(founders_reward_test, testnet) {
     SelectParams(CBaseChainParams::TESTNET);
@@ -130,20 +130,21 @@ TEST(founders_reward_test, regtest) {
 
 
 
-// Test that 10% founders reward is fully rewarded after the first halving and slow start shift.
-// On Mainnet, this would be 2,100,000 ZEC after 850,000 blocks (840,000 + 10,000).
+// Test that 3% founders reward is 2,211,600 KOTO
 TEST(founders_reward_test, slow_start_subsidy) {
     SelectParams(CBaseChainParams::MAIN);
     CChainParams params = Params();
 
-    int maxHeight = params.GetConsensus().GetLastFoundersRewardBlockHeight();    
+    int maxHeight = params.GetConsensus().GetLastFoundersRewardBlockHeight();
+    int startHeight = params.GetConsensus().vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight;
+
     CAmount totalSubsidy = 0;
-    for (int nHeight = 1; nHeight <= maxHeight; nHeight++) {
-        CAmount nSubsidy = GetBlockSubsidy(nHeight, params.GetConsensus()) / 5;
+    for (int nHeight = startHeight; nHeight <= maxHeight; nHeight++) {
+        CAmount nSubsidy = GetBlockSubsidy(nHeight, params.GetConsensus()) * params.GetConsensus().nFoundersRewardPercentage / 100;
         totalSubsidy += nSubsidy;
     }
     
-    ASSERT_TRUE(totalSubsidy == MAX_MONEY/10.0);
+    ASSERT_TRUE(totalSubsidy == 221160000000000);
 }
 
 
@@ -158,7 +159,7 @@ void verifyNumberOfRewards() {
     }
 
 //    ASSERT_TRUE(ms.count(params.GetFoundersRewardAddressAtIndex(0)) == 17708);
-    for (int i = 1; i <= 46; i++) {
+    for (int i = 1; i <= 1; i++) {
 //        ASSERT_TRUE(ms.count(params.GetFoundersRewardAddressAtIndex(i)) == 17709);
     }
 //    ASSERT_TRUE(ms.count(params.GetFoundersRewardAddressAtIndex(47)) == 17677);

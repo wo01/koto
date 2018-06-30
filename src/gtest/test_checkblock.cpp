@@ -173,8 +173,8 @@ TEST(ContextualCheckBlock, BlockOverwinterRulesAcceptOverwinterTx) {
     mtx.vin[0].prevout.SetNull();
     mtx.vin[0].scriptSig = CScript() << 1 << OP_0;
     mtx.vout.resize(1);
-    mtx.vout[0].scriptPubKey = CScript() << OP_TRUE;
-    mtx.vout[0].nValue = 0;
+    mtx.vout[0].scriptPubKey = Params().GetFoundersRewardScriptAtHeight(Params().GetConsensus().vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight);
+    mtx.vout[0].nValue = 11760000000000; // 392000000000000 * 3%
     mtx.fOverwintered = true;
     mtx.nVersion = 3;
     mtx.nVersionGroupId = OVERWINTER_VERSION_GROUP_ID;

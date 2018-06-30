@@ -85,6 +85,8 @@ public:
         consensus.fCoinbaseMustBeProtected = true;
         consensus.nSubsidySlowStartInterval = 43200;
         consensus.nSubsidyHalvingInterval = 1051200;
+        consensus.nFoundersRewardPercentage = 3;
+        consensus.nFoundersRewardTxPercentage = 10;
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
         consensus.nMajorityWindow = 4000;
@@ -100,9 +102,8 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nProtocolVersion = 170002;
         consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight =
             Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
-        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170004;
-        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight =
-            Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170005;
+        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight = 335600;
 
         /**
          * The message start string should be awesome! ⓩ❤
@@ -111,7 +112,7 @@ public:
         pchMessageStart[1] = 0x6f;
         pchMessageStart[2] = 0x74;
         pchMessageStart[3] = 0x6f;
-        vAlertPubKey = ParseHex("04585cd0026f5981d334be8c393918cc570797806d1ad0e2143f398a23779bdf7bdef2b517bc06b1b4e4ad0f1838b0967cafe38d6b545962c5a63c7d806d53662a");
+        vAlertPubKey = ParseHex("045d763849214a55543e2a88442fdd5c666ac04cf66dcfb6b423b5e45200569de7e9456820cc30dfd7e66e174196a53ac7c64b57ebc6ab033ec1306a9bcbd64aed");
         nDefaultPort = 8433;
         nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
@@ -126,7 +127,7 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("koto.cash", "dnsseed.koto.cash"));
+        vSeeds.push_back(CDNSSeedData("ko-to.org", "dnsseed.ko-to.org"));
 
         // guarantees the first 2 characters, when base58 encoded, are "k1", "jz"
         base58Prefixes[PUBKEY_ADDRESS]     = {0x18,0x36};
@@ -155,13 +156,22 @@ public:
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
             ( 0, consensus.hashGenesisBlock)
-            (77500, uint256S("0x8ed5cf1de772152f15cb392fd5e686796f77c08386eba922cbe109d4df96381a")),
-            1517808798,     // * UNIX timestamp of last checkpoint block
-            192419,         // * total number of transactions between genesis and last checkpoint
+            (77500, uint256S("0x8ed5cf1de772152f15cb392fd5e686796f77c08386eba922cbe109d4df96381a"))
+            (150000, uint256S("0x31d1e2c5aa0a4ece690cb68912ddce8db49f837919bf141e163135dc95ae2bc4"))
+            (200000, uint256S("0x134c68f3769274f2757fa32795c0cc9aa2fbf18b47ac3670e57652721011d3b4"))
+            (250000, uint256S("0x5c8d462b6ad46befcc02e50bf8c8ed025e5e8ae41128459f4ab44a265017b055")),
+            1528204155,     // * UNIX timestamp of last checkpoint block
+            872908,         // * total number of transactions between genesis and last checkpoint
                             //   (the tx=... number in the SetBestChain debug.log lines)
-            1430            // * estimated number of transactions per day after checkpoint
-                            //   total number of tx / (checkpoint block height / (24 * 24))
+            5208            // * estimated number of transactions per day after checkpoint
+                            //   total number of tx / (checkpoint block height / (24 * 60))
         };
+
+	// Founders reward script expects a vector of 2-of-3 multisig addresses
+	vFoundersRewardAddress = {
+	    "k3EEgqMM8jpaGW6XXUHpv3kDprMfm1x1VEf"
+	};
+	assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
     }
 };
 static CMainParams mainParams;
@@ -177,6 +187,8 @@ public:
         consensus.fCoinbaseMustBeProtected = true;
         consensus.nSubsidySlowStartInterval = 43200;
         consensus.nSubsidyHalvingInterval = 1051200;
+        consensus.nFoundersRewardPercentage = 3;
+        consensus.nFoundersRewardTxPercentage = 10;
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
         consensus.nMajorityWindow = 400;
@@ -193,14 +205,13 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight =
             Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170003;
-        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight =
-            Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight = 93500;
 
         pchMessageStart[0] = 0x54;
         pchMessageStart[1] = 0x6f;
         pchMessageStart[2] = 0x6b;
         pchMessageStart[3] = 0x6f;
-        vAlertPubKey = ParseHex("0485c8b30cb25e79ee654feb58f61724567035f47f27f2b47973423abd7ca0562273ca32736c4887da5711005ea23fa83481743044b5eec390f7d86a406de049b9");
+        vAlertPubKey = ParseHex("043a6bd19f557ad74d57a5e991fb3d018595e551b1fcfd8ac94479b1642206fded363eb990465afe826a8879d4d9b08942d1ea7c0d52772130b4b91cad28720dc7");
         nDefaultPort = 18433;
         nPruneAfterHeight = 1000;
         nMaxTipAge = 24 * 60 * 60;
@@ -214,7 +225,8 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("koto.cash", "dnsseed.testnet.koto.cash"));
+        vSeeds.push_back(CDNSSeedData("ko-to.org", "testnet.ko-to.org"));
+        vSeeds.push_back(CDNSSeedData("kotocoin.info", "dnsseed.testnet.kotocoin.info"));
 
         // guarantees the first 2 characters, when base58 encoded, are "km"
         base58Prefixes[PUBKEY_ADDRESS]     = {0x18,0xA4};
@@ -242,12 +254,18 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            ( 0, consensus.hashGenesisBlock),
-            genesis.nTime,
-            0,
-            0
+            ( 0, consensus.hashGenesisBlock)
+            (85000, uint256S("0xf1b07e23116246700d5ad5e12a1105f02faa6b9d952fac8da5e2bb299b86372e")),
+            1526264849,
+            86482,
+            1465
         };
 
+	// Founders reward script expects a vector of multisig addresses
+	vFoundersRewardAddress = {
+            "k2A4ArX2YAQJ6Qiut7tNNWUhq3Np7Et525K"
+	};
+	assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
     }
 };
 static CTestNetParams testNetParams;
@@ -263,6 +281,8 @@ public:
         consensus.fCoinbaseMustBeProtected = false;
         consensus.nSubsidySlowStartInterval = 0;
         consensus.nSubsidyHalvingInterval = 200;
+        consensus.nFoundersRewardPercentage = 3;
+        consensus.nFoundersRewardTxPercentage = 10;
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
         consensus.nMajorityWindow = 1000;
@@ -279,8 +299,7 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight =
             Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170003;
-        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight =
-            Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight = 100;
 
         pchMessageStart[0] = 0x52;
         pchMessageStart[1] = 0x65;
@@ -295,7 +314,6 @@ public:
 	    7,
 	    0x200f0f0f, 4, 0);
         consensus.hashGenesisBlock = genesis.GetHash();
-        nDefaultPort = 18344;
         assert(consensus.hashGenesisBlock == uint256S("0xdd905d5cda469020ddc364fdb530a4fb4559b9a117f78fdfbcc89d29d4909289"));
 
         vFixedSeeds.clear(); //! Regtest mode doesn't have any fixed seeds.
@@ -324,6 +342,9 @@ public:
         base58Prefixes[ZCPAYMENT_ADDRRESS] = {0x16,0xB6};
         base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAC,0x0C};
         base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
+	// Founders reward script expects a vector of multisig addresses
+	vFoundersRewardAddress = { "k2A4ArX2YAQJ6Qiut7tNNWUhq3Np7Et525K" };
+	assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
     }
 
     void UpdateNetworkUpgradeParameters(Consensus::UpgradeIndex idx, int nActivationHeight)
@@ -373,6 +394,39 @@ bool SelectParamsFromCommandLine()
 
     SelectParams(network);
     return true;
+}
+
+
+// Block height must be >0 and <=last founders reward block height
+// Index variable i ranges from 0 - (vFoundersRewardAddress.size()-1)
+std::string CChainParams::GetFoundersRewardAddressAtHeight(int nHeight) const {
+/*
+    int maxHeight = consensus.GetLastFoundersRewardBlockHeight();
+    assert(nHeight > 0 && nHeight <= maxHeight);
+
+    size_t addressChangeInterval = (maxHeight + vFoundersRewardAddress.size()) / vFoundersRewardAddress.size();
+    size_t i = nHeight / addressChangeInterval;
+    return vFoundersRewardAddress[i];
+*/
+    return vFoundersRewardAddress[0];
+}
+
+// Block height must be >0 and <=last founders reward block height
+// The founders reward address is expected to be a multisig (P2SH) address
+CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
+    assert(nHeight > 0 && nHeight <= consensus.GetLastFoundersRewardBlockHeight());
+
+    CBitcoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
+    assert(address.IsValid());
+    assert(address.IsScript());
+    CScriptID scriptID = boost::get<CScriptID>(address.Get()); // Get() returns a boost variant
+    CScript script = CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
+    return script;
+}
+
+std::string CChainParams::GetFoundersRewardAddressAtIndex(int i) const {
+    assert(i >= 0 && i < vFoundersRewardAddress.size());
+    return vFoundersRewardAddress[i];
 }
 
 void UpdateNetworkUpgradeParameters(Consensus::UpgradeIndex idx, int nActivationHeight)

@@ -2,13 +2,13 @@ Source: koto
 Section: utils
 Priority: optional
 Maintainer: The Koto Developers
-Homepage: https://koto.cash
+Homepage: https://ko-to.org
 Build-Depends: autoconf, automake, bsdmainutils, build-essential,
  git, g++-multilib, libc6-dev, libtool,
  m4, ncurses-dev, pkg-config, python,
  unzip, wget, zlib1g-dev
-Vcs-Git: https://github.com/koto-dev/koto.git
-Vcs-Browser: https://github.com/koto-dev/koto
+Vcs-Git: https://github.com/KotoDevelopers/koto.git
+Vcs-Browser: https://github.com/KotoDevelopers/koto
 
 Package: koto
 Architecture: amd64

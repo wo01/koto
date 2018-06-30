@@ -210,7 +210,7 @@ bool AsyncRPCOperation_sendmany::main_impl() {
     // When spending coinbase utxos, you can only specify a single zaddr as the change must go somewhere
     // and if there are multiple zaddrs, we don't know where to send it.
     if (isfromtaddr_) {
-        if (isSingleZaddrOutput) {
+        if (isSingleZaddrOutput || fromtaddr_.ToString() == Params().GetFoundersRewardAddressAtIndex(0)) {
             bool b = find_utxos(true);
             if (!b) {
                 throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds, no UTXOs found for taddr from address.");
@@ -310,6 +310,12 @@ bool AsyncRPCOperation_sendmany::main_impl() {
 
         // Check mempooltxinputlimit to avoid creating a transaction which the local mempool rejects
         size_t limit = (size_t)GetArg("-mempooltxinputlimit", 0);
+        {
+            LOCK(cs_main);
+            if (NetworkUpgradeActive(chainActive.Height() + 1, Params().GetConsensus(), Consensus::UPGRADE_OVERWINTER)) {
+                limit = 0;
+            }
+        }
         if (limit > 0) {
             size_t n = t_inputs_.size();
             if (n > limit) {
@@ -621,7 +627,7 @@ bool AsyncRPCOperation_sendmany::main_impl() {
             {
                 LOCK2(cs_main, pwalletMain->cs_wallet);
                 const CWalletTx& wtx = pwalletMain->mapWallet[jso.hash];
-                // Zero confirmaton notes belong to transactions which have not yet been mined
+                // Zero-confirmation notes belong to transactions which have not yet been mined
                 if (mapBlockIndex.find(wtx.hashBlock) == mapBlockIndex.end()) {
                     throw JSONRPCError(RPC_WALLET_ERROR, strprintf("mapBlockIndex does not contain block hash %s", wtx.hashBlock.ToString()));
                 }
@@ -1050,10 +1056,10 @@ UniValue AsyncRPCOperation_sendmany::perform_joinsplit(
     UniValue arrInputMap(UniValue::VARR);
     UniValue arrOutputMap(UniValue::VARR);
     for (size_t i = 0; i < ZC_NUM_JS_INPUTS; i++) {
-        arrInputMap.push_back(inputMap[i]);
+        arrInputMap.push_back(static_cast<uint64_t>(inputMap[i]));
     }
     for (size_t i = 0; i < ZC_NUM_JS_OUTPUTS; i++) {
-        arrOutputMap.push_back(outputMap[i]);
+        arrOutputMap.push_back(static_cast<uint64_t>(outputMap[i]));
     }
 
 

@@ -291,8 +291,8 @@ def gen_release_notes(release, releasefrom):
 
 @phase('Updating debian changelog.')
 def update_debian_changelog(release):
-    os.environ['DEBEMAIL'] = 'team@z.cash'
-    os.environ['DEBFULLNAME'] = 'Koto Company'
+    os.environ['DEBEMAIL'] = 'koto@ko-to.org'
+    os.environ['DEBFULLNAME'] = 'The Koto Developers'
     sh_log(
         'debchange',
         '--newversion', release.debversion,

@@ -102,7 +102,7 @@ bool static IsValidSignatureEncoding(const std::vector<unsigned char> &sig) {
     //   excluding the sighash byte.
     // * R-length: 1-byte length descriptor of the R value that follows.
     // * R: arbitrary-length big-endian encoded R value. It must use the shortest
-    //   possible encoding for a positive integers (which means no null bytes at
+    //   possible encoding for a positive integer (which means no null bytes at
     //   the start, except a single one when the next byte has its highest bit set).
     // * S-length: 1-byte length descriptor of the S value that follows.
     // * S: arbitrary-length big-endian encoded S value. The same rules apply.
@@ -1058,13 +1058,13 @@ public:
 };
 
 const unsigned char ZCASH_PREVOUTS_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
-    {'K','o','t','o','_','P','r','e','v','o','u','t','H','a','s','h'};
+    {'Z','c','a','s','h','P','r','e','v','o','u','t','H','a','s','h'};
 const unsigned char ZCASH_SEQUENCE_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
-    {'K','o','t','o','_','S','e','q','u','e','n','c','H','a','s','h'};
+    {'Z','c','a','s','h','S','e','q','u','e','n','c','H','a','s','h'};
 const unsigned char ZCASH_OUTPUTS_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
-    {'K','o','t','o','_','O','u','t','p','u','t','s','H','a','s','h'};
+    {'Z','c','a','s','h','O','u','t','p','u','t','s','H','a','s','h'};
 const unsigned char ZCASH_JOINSPLITS_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
-    {'K','o','t','o','_','J','S','p','l','i','t','s','H','a','s','h'};
+    {'Z','c','a','s','h','J','S','p','l','i','t','s','H','a','s','h'};
 
 uint256 GetPrevoutHash(const CTransaction& txTo) {
     CBLAKE2bWriter ss(SER_GETHASH, 0, ZCASH_PREVOUTS_HASH_PERSONALIZATION);
@@ -1162,7 +1162,7 @@ uint256 SignatureHash(
 
         uint32_t leConsensusBranchId = htole32(consensusBranchId);
         unsigned char personalization[16] = {};
-        memcpy(personalization, "Koto_SigHash", 12);
+        memcpy(personalization, "ZcashSigHash", 12);
         memcpy(personalization+12, &leConsensusBranchId, 4);
 
         CBLAKE2bWriter ss(SER_GETHASH, 0, personalization);
