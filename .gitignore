@@ -2,10 +2,10 @@
 *.deb
 *.exe
 src/bitcoin
-src/zcashd
-src/zcash-cli
-src/zcash-gtest
-src/zcash-tx
+src/kotod
+src/koto-cli
+src/koto-gtest
+src/koto-tx
 src/test/test_bitcoin
 
 *zcashTest.pk
@@ -79,3 +79,4 @@ dkms.conf
 /configure
 /libtool
 /libzcashconsensus.pc
+config.log
