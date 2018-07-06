@@ -520,10 +520,10 @@ UniValue signmessage(const UniValue& params, bool fHelp)
     if (fHelp || params.size() != 2)
         throw runtime_error(
             "signmessage \"kotoaddress\" \"message\"\n"
-            "\nSign a message with the private key of an address"
+            "\nSign a message with the private key of a kotoaddress"
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
-            "1. \"kotoaddress\"  (string, required) The Koto address to use for the private key.\n"
+            "1. \"kotoaddress\"  (string, required) The transparent address to use for the private key.\n"
             "2. \"message\"         (string, required) The message to create a signature of.\n"
             "\nResult:\n"
             "\"signature\"          (string) The signature of the message encoded in base 64\n"
@@ -2638,11 +2638,11 @@ UniValue zc_sample_joinsplit(const UniValue& params, bool fHelp)
 
     LOCK(cs_main);
 
-    uint256 pubKeyHash;
+    uint256 joinSplitPubKey;
     uint256 anchor = ZCIncrementalMerkleTree().root();
     JSDescription samplejoinsplit(true,
                                   *pzcashParams,
-                                  pubKeyHash,
+                                  joinSplitPubKey,
                                   anchor,
                                   {JSInput(), JSInput()},
                                   {JSOutput(), JSOutput()},

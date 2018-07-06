@@ -147,6 +147,11 @@ public:
         // guarantees the first 2 characters, when base58 encoded, are "SK"
         base58Prefixes[ZCSPENDING_KEY]     = {0xAB,0x36};
 
+        bech32HRPs[SAPLING_PAYMENT_ADDRESS]      = "koto";
+        bech32HRPs[SAPLING_FULL_VIEWING_KEY]     = "kviews";
+        bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "kivks";
+        bech32HRPs[SAPLING_SPENDING_KEY]         = "ksecret-spending-key-main";
+
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
         fMiningRequiresPeers = true;
@@ -247,6 +252,11 @@ public:
         base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAC,0x0C};
         // guarantees the first 2 characters, when base58 encoded, are "ST"
         base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
+
+        bech32HRPs[SAPLING_PAYMENT_ADDRESS]      = "ktestsapling";
+        bech32HRPs[SAPLING_FULL_VIEWING_KEY]     = "kviewtestsapling";
+        bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "kivktestsapling";
+        bech32HRPs[SAPLING_SPENDING_KEY]         = "ksecret-spending-key-test";
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
@@ -350,6 +360,12 @@ public:
         base58Prefixes[ZCPAYMENT_ADDRRESS] = {0x16,0xB6};
         base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAC,0x0C};
         base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
+
+        bech32HRPs[SAPLING_PAYMENT_ADDRESS]      = "kregtestsapling";
+        bech32HRPs[SAPLING_FULL_VIEWING_KEY]     = "kviewregtestsapling";
+        bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "kivkregtestsapling";
+        bech32HRPs[SAPLING_SPENDING_KEY]         = "ksecret-spending-key-regtest";
+
 	// Founders reward script expects a vector of multisig addresses
 	vFoundersRewardAddress = { "k2A4ArX2YAQJ6Qiut7tNNWUhq3Np7Et525K" };
 	assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
