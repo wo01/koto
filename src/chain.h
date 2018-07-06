@@ -385,12 +385,12 @@ public:
         READWRITE(this->nVersion);
         READWRITE(hashPrev);
         READWRITE(hashMerkleRoot);
-        if (nVersion >= SAPLING_VALUE_VERSION) {
-            READWRITE(hashFinalSaplingRoot);
-        }
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+        if (nVersion >= SAPLING_VALUE_VERSION) {
+            READWRITE(hashFinalSaplingRoot);
+        }
 
         // Only read/write nSproutValue if the client version used to create
         // this index was storing them.

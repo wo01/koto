@@ -46,12 +46,12 @@ public:
         READWRITE(this->nVersion);
         READWRITE(hashPrevBlock);
         READWRITE(hashMerkleRoot);
-        if (this->nVersion >= SAPLING_VALUE_VERSION) {
-            READWRITE(hashFinalSaplingRoot);
-        }
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+        if (this->nVersion >= SAPLING_VALUE_VERSION) {
+            READWRITE(hashFinalSaplingRoot);
+        }
     }
 
     void SetNull()
