@@ -1,4 +1,15 @@
-# Created by https://www.gitignore.io/api/c
+*.tar.gz
+*.deb
+*.exe
+src/bitcoin
+src/zcashd
+src/zcash-cli
+src/zcash-gtest
+src/zcash-tx
+src/test/test_bitcoin
+
+*zcashTest.pk
+*zcashTest.vk
 
 ### C ###
 # Prerequisites
@@ -34,6 +45,7 @@
 # Executables
 *.exe
 *.out
+*.app
 *.i*86
 *.x86_64
 *.hex
