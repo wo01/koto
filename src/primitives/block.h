@@ -25,7 +25,7 @@ class CBlockHeader
 public:
     // header
     static const int32_t CURRENT_VERSION=4;
-    static const int SAPLING_VALUE_VERSION = 1010100;
+    static const int32_t SAPLING_VERSION=5;
     int32_t nVersion;
     uint256 hashPrevBlock;
     uint256 hashMerkleRoot;
@@ -49,7 +49,7 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
-        if (this->nVersion >= SAPLING_VALUE_VERSION) {
+        if (this->nVersion >= CBlockHeader::SAPLING_VERSION) {
             READWRITE(hashFinalSaplingRoot);
         }
     }
@@ -80,7 +80,7 @@ public:
     uint256 GetPoWHash() const
     {
         uint256 thash;
-        if (this->nVersion >= SAPLING_VALUE_VERSION) {
+        if (this->nVersion >= CBlockHeader::SAPLING_VERSION) {
             yescrypt_hash(BEGIN(nVersion), 112, BEGIN(thash));
         } else {
             yescrypt_hash(BEGIN(nVersion), 80, BEGIN(thash));

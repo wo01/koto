@@ -142,6 +142,9 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
         CBlockIndex* pindexPrev = chainActive.Tip();
         const int nHeight = pindexPrev->nHeight + 1;
         uint32_t consensusBranchId = CurrentEpochBranchId(nHeight, chainparams.GetConsensus());
+        if (NetworkUpgradeActive(nHeight, chainparams.GetConsensus(), Consensus::UPGRADE_SAPLING)) {
+            pblock->nVersion = CBlockHeader::SAPLING_VERSION;
+	}
         pblock->nTime = GetAdjustedTime();
         const int64_t nMedianTimePast = pindexPrev->GetMedianTimePast();
         CCoinsViewCache view(pcoinsTip);

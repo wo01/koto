@@ -388,7 +388,7 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
-        if (nVersion >= SAPLING_VALUE_VERSION) {
+        if (this->nVersion >= CBlockHeader::SAPLING_VERSION) {
             READWRITE(hashFinalSaplingRoot);
         }
 
