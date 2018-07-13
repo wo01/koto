@@ -3004,6 +3004,11 @@ DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
 }
 
 
+bool CWallet::SetZAddressBook(const libzcash::PaymentAddress& address, const string& strName, const string& strPurpose)
+{
+    NotifyZAddressBookChanged(this, address, strName, false, strPurpose, CT_NEW);
+}
+
 bool CWallet::SetAddressBook(const CTxDestination& address, const string& strName, const string& strPurpose)
 {
     bool fUpdated = false;
@@ -3041,7 +3046,7 @@ bool CWallet::DelAddressBook(const CTxDestination& address)
         mapAddressBook.erase(address);
     }
 
-    NotifyAddressBookChanged(this, address, "", ::IsMine(*this, address) != ISMINE_NO, "", CT_DELETED);
+    NotifyAddressBookChanged(this, address, "", ::IsMine(*this, address) != ISMINE_NO, "send", CT_DELETED);
 
     if (!fFileBacked)
         return false;

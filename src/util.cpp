@@ -102,6 +102,7 @@ using namespace std;
 map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
 bool fDebug = false;
+bool fQtGui = false;
 bool fPrintToConsole = false;
 bool fPrintToDebugLog = true;
 bool fDaemon = false;
@@ -925,6 +926,9 @@ std::string LicenseInfo()
     return "\n" +
            FormatParagraph(strprintf(_("Copyright (C) 2009-%i The Bitcoin Core Developers"), COPYRIGHT_YEAR)) + "\n" +
            FormatParagraph(strprintf(_("Copyright (C) 2015-%i The Zcash Developers"), COPYRIGHT_YEAR)) + "\n" +
+           FormatParagraph(strprintf(_("Copyright (C) 2011-%i Globalboost Developers"), COPYRIGHT_YEAR)) + "\n" +
+           FormatParagraph(strprintf(_("Copyright (C) 2013-%i The Monacoin Developers"), COPYRIGHT_YEAR)) + "\n" +
+           FormatParagraph(strprintf(_("Copyright (C) 2017-%i The LitecoinZ Developers"), COPYRIGHT_YEAR)) + "\n" +
            FormatParagraph(strprintf(_("Copyright (C) 2017-%i The Koto Developers"), COPYRIGHT_YEAR)) + "\n" +
            "\n" +
            FormatParagraph(_("This is experimental software.")) + "\n" +
@@ -940,3 +944,10 @@ int GetNumCores()
     return boost::thread::physical_concurrency();
 }
 
+std::string CopyrightHolders()
+{
+    std::string strCopyrightHolders = _(COPYRIGHT_HOLDERS);
+    if (strCopyrightHolders.find("%s") == strCopyrightHolders.npos)
+	return strCopyrightHolders;
+    return strprintf(strCopyrightHolders, _(PACKAGE_NAME));
+}

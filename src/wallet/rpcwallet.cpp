@@ -3113,6 +3113,7 @@ UniValue z_getnewaddress(const UniValue& params, bool fHelp)
     EnsureWalletIsUnlocked();
 
     auto zaddr = pwalletMain->GenerateNewZKey();
+    pwalletMain->SetZAddressBook(zaddr, "", "zreceive");
     return EncodePaymentAddress(zaddr);
 }
 
