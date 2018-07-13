@@ -83,6 +83,9 @@ dkms.conf
 /libzcashconsensus.pc
 config.log
 share/qt/Info.plist
+share/setup.nsi
+src/qt/qrc_bitcoin_locale.cpp
+src/qt/qrc_bitcoin.cpp
 src/qt/*.moc
 src/qt/moc_*.cpp
 src/qt/forms/ui_*.h
