@@ -131,7 +131,7 @@ TEST(ContextualCheckBlock, BlockSproutRulesRejectSaplingTx) {
     MockCValidationState state;
     CBlockIndex indexPrev {Params().GenesisBlock()};
 
-    EXPECT_CALL(state, DoS(100, false, REJECT_INVALID, "tx-overwinter-not-active", false)).Times(1);
+    EXPECT_CALL(state, DoS(0, false, REJECT_INVALID, "tx-overwinter-not-active", false)).Times(1);
     EXPECT_FALSE(ContextualCheckBlock(block, state, &indexPrev));
 }
 
@@ -160,7 +160,7 @@ TEST(ContextualCheckBlock, BlockSproutRulesRejectOverwinterTx) {
     MockCValidationState state;
     CBlockIndex indexPrev {Params().GenesisBlock()};
 
-    EXPECT_CALL(state, DoS(100, false, REJECT_INVALID, "tx-overwinter-not-active", false)).Times(1);
+    EXPECT_CALL(state, DoS(0, false, REJECT_INVALID, "tx-overwinter-not-active", false)).Times(1);
     EXPECT_FALSE(ContextualCheckBlock(block, state, &indexPrev));
 }
 
