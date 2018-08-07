@@ -66,6 +66,7 @@
 #include "amqp/amqpnotificationinterface.h"
 #endif
 
+#include "fetchparams.h"
 #include "librustzcash.h"
 
 using namespace std;
@@ -678,7 +679,7 @@ bool InitSanityCheck(void)
 }
 
 
-static void ZC_LoadParams(
+static bool ZC_LoadParams(
     const CChainParams& chainparams
 )
 {
@@ -691,29 +692,53 @@ static void ZC_LoadParams(
     boost::filesystem::path sapling_output = ZC_GetParamsDir() / "sapling-output-testnet.params";
     boost::filesystem::path sprout_groth16 = ZC_GetParamsDir() / "sprout-groth16-testnet.params";
 
-    bool sapling_paths_valid = true;
+    if(!(boost::filesystem::is_directory(ZC_GetParamsDir()))) {
+        // Create the '.zcash-params' directory or the 'ZcashParams' folder
+	TryCreateDirectory(ZC_GetParamsDir());
+    }
+    if(!(boost::filesystem::exists(pk_path))) {
+	// Download the 'sprout-proving.key' file
+	if (!LTZ_FetchParams("http://dl.ko-to.org:8080/sprout-proving.key", pk_path.string()))
+	    return false;
+    }
+    // Verify the 'sprout-proving.key' file
+    if (!(LTZ_VerifyParams(pk_path.string(), "8bc20a7f013b2b58970cddd2e7ea028975c88ae7ceb9259a5344a16bc2c0eef7")))
+	return false;
+    if(!(boost::filesystem::exists(vk_path))) {
+	// Download the 'sprout-verifying.key' file
+	if (!LTZ_FetchParams("http://dl.ko-to.org:8080/sprout-verifying.key", vk_path.string()))
+	    return false;
+    }
+    // Verify the 'sprout-verifying.key' file
+    if (!(LTZ_VerifyParams(vk_path.string(), "4bd498dae0aacfd8e98dc306338d017d9c08dd0918ead18172bd0aec2fc5df82")))
+	return false;
 
     // We don't load Sapling zk-SNARK params if mainnet is configured
     if (chainparams.NetworkIDString() != "main") {
-        sapling_paths_valid =
-            boost::filesystem::exists(sapling_spend) &&
-            boost::filesystem::exists(sapling_output) &&
-            boost::filesystem::exists(sprout_groth16);
-    }
-
-    if (!(
-        boost::filesystem::exists(pk_path) &&
-        boost::filesystem::exists(vk_path) &&
-        sapling_paths_valid
-    )) {
-        uiInterface.ThreadSafeMessageBox(strprintf(
-            _("Cannot find the Koto network parameters in the following directory:\n"
-              "%s\n"
-              "Please run 'koto-fetch-params' or './zcutil/fetch-params.sh' and then restart."),
-                ZC_GetParamsDir()),
-            "", CClientUIInterface::MSG_ERROR);
-        StartShutdown();
-        return;
+	if(!(boost::filesystem::exists(sapling_spend))) {
+	    // Download the 'sapling-spend-testnet.params' file
+	    if (!LTZ_FetchParams("http://dl.ko-to.org:8080/sapling-spend-testnet.params", sapling_spend.string()))
+		return false;
+	}
+	// Verify the 'sapling-spend-testnet.params' file
+	if (!(LTZ_VerifyParams(sapling_spend.string(), "0459ac407b95de2b3cbd6876358920c1e2044680f28badaeb6b49169d210a31e")))
+	    return false;
+	if(!(boost::filesystem::exists(sapling_output))) {
+	    // Download the 'sapling-output-testnet.params' file
+	    if (!LTZ_FetchParams("http://dl.ko-to.org:8080/sapling-output-testnet.params", sapling_output.string()))
+		return false;
+	}
+	// Verify the 'sapling-output-testnet.params' file
+	if (!(LTZ_VerifyParams(sapling_output.string(), "53fea4df10540c7979a72497f16a3932d953758b356e637747caa4a25d0ab914")))
+	    return false;
+	if(!(boost::filesystem::exists(sprout_groth16))) {
+	    // Download the 'sprout-groth16-testnet.params' file
+	    if (!LTZ_FetchParams("http://dl.ko-to.org:8080/sprout-groth16-testnet.params", sprout_groth16.string()))
+		return false;
+	}
+	// Verify the 'sprout-groth16-testnet.params' file
+	if (!(LTZ_VerifyParams(sprout_groth16.string(), "58ae56ce8d2c4d4001a55c002c7d6be273835818187881aab41cdfc704b9dbf9")))
+	    return false;
     }
 
     LogPrintf("Loading verifying key from %s\n", vk_path.string().c_str());
@@ -747,6 +772,8 @@ static void ZC_LoadParams(
     } else {
         LogPrintf("Not loading Sapling parameters in mainnet\n");
     }
+
+    return true;
 }
 
 bool AppInitServers(boost::thread_group& threadGroup)
@@ -1233,7 +1260,8 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     libsnark::inhibit_profiling_counters = true;
 
     // Initialize Koto circuit parameters
-    ZC_LoadParams(chainparams);
+    if (!(ZC_LoadParams(chainparams)))
+	return InitError(_("Error downloading or verifying Koto network parameters"));
 
     /* Start the RPC server already.  It will be started in "warmup" mode
      * and not really process calls already (but it will signify connections
