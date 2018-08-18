@@ -81,7 +81,7 @@ class MempoolTxExpiryTest(BitcoinTestFramework):
         # Get balance on node 0
         bal = self.nodes[0].z_gettotalbalance()
         print "Balance before zsend, after shielding 10: ", bal
-        assert_equal(Decimal(bal["private"]), Decimal("9.9999"))
+        assert_equal(Decimal(bal["private"]), Decimal("99.9999"))
 
         print "Splitting network..."
         self.split_network()
@@ -214,7 +214,7 @@ class MempoolTxExpiryTest(BitcoinTestFramework):
         print "Ensure balance of node 0 is correct"
         bal = self.nodes[0].z_gettotalbalance()
         print "Balance after expire_shielded has expired: ", bal
-        assert_equal(Decimal(bal["private"]), Decimal("7.9999"))
+        assert_equal(Decimal(bal["private"]), Decimal("97.9999"))
 
 
 if __name__ == '__main__':

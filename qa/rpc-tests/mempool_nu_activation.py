@@ -42,7 +42,7 @@ class MempoolUpgradeActivationTest(BitcoinTestFramework):
         # Shield some ZEC
         node1_taddr = self.nodes[1].getnewaddress()
         node0_zaddr = self.nodes[0].z_getnewaddress()
-        recipients = [{'address': node0_zaddr, 'amount': Decimal('10')}]
+        recipients = [{'address': node0_zaddr, 'amount': Decimal('100')}]
         myopid = self.nodes[1].z_sendmany(node1_taddr, recipients, 1, Decimal('0'))
         print wait_and_assert_operationid_status(self.nodes[1], myopid)
         self.sync_all()
@@ -58,7 +58,7 @@ class MempoolUpgradeActivationTest(BitcoinTestFramework):
             assert_equal(set(self.nodes[0].getrawmempool()), set())
 
             # Check node 0 shielded balance
-            assert_equal(self.nodes[0].z_getbalance(node0_zaddr), Decimal('10'))
+            assert_equal(self.nodes[0].z_getbalance(node0_zaddr), Decimal('100'))
 
             # Fill the mempool with twice as many transactions as can fit into blocks
             node0_taddr = self.nodes[0].getnewaddress()
@@ -91,7 +91,7 @@ class MempoolUpgradeActivationTest(BitcoinTestFramework):
             self.sync_all()
 
             # Create a shielded Y transaction
-            recipients = [{'address': node0_zaddr, 'amount': Decimal('10')}]
+            recipients = [{'address': node0_zaddr, 'amount': Decimal('100')}]
             myopid = self.nodes[0].z_sendmany(node0_zaddr, recipients, 1, Decimal('0'))
             shielded = wait_and_assert_operationid_status(self.nodes[0], myopid)
             assert(shielded != None)
@@ -119,7 +119,7 @@ class MempoolUpgradeActivationTest(BitcoinTestFramework):
             assert_equal(set(self.nodes[0].getrawmempool()), set())
 
             # Node 0 note should be spendable again
-            assert_equal(self.nodes[0].z_getbalance(node0_zaddr), Decimal('10'))
+            assert_equal(self.nodes[0].z_getbalance(node0_zaddr), Decimal('100'))
 
             # Reconsider block H - 1.
             self.nodes[0].reconsiderblock(block_hm1)

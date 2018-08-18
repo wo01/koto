@@ -145,7 +145,7 @@ STAGES = [
 
 STAGE_COMMANDS = {
     'btest': [repofile('src/test/test_bitcoin'), '-p'],
-    'gtest': [repofile('src/zcash-gtest')],
+    'gtest': [repofile('src/koto-gtest')],
     'sec-hard': check_security_hardening,
     'no-dot-so': ensure_no_dot_so_in_depends,
     'util-test': util_test,
