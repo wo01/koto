@@ -387,9 +387,9 @@ libbitcoin_common_a_SOURCES = \
   script/script_error.cpp \
   script/sign.cpp \
   script/standard.cpp \
-  yescryptcommon.c \
-  yescrypt-opt.c \
-  sha256_Y.c \
+  yespower.c \
+  yespower-opt.c \
+  sha256.c \
   $(BITCOIN_CORE_H) \
   $(LIBZCASH_H)
 
