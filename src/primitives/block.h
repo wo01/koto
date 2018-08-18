@@ -9,7 +9,7 @@
 #include "primitives/transaction.h"
 #include "serialize.h"
 #include "uint256.h"
-#include "yescrypt.h"
+#include "yespower.h"
 #include "utilstrencodings.h"
 
 
@@ -81,9 +81,9 @@ public:
     {
         uint256 thash;
         if (this->nVersion >= CBlockHeader::SAPLING_VERSION) {
-            yescrypt_hash(BEGIN(nVersion), 112, BEGIN(thash));
+            yespower_hash(BEGIN(nVersion), 112, BEGIN(thash));
         } else {
-            yescrypt_hash(BEGIN(nVersion), 80, BEGIN(thash));
+            yespower_hash(BEGIN(nVersion), 80, BEGIN(thash));
         }
         return thash;
     }
