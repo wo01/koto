@@ -214,7 +214,8 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170003;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight = 93500;
         consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nProtocolVersion = 170006;
-        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight = 173900;
+        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight =
+	    Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         pchMessageStart[0] = 0x54;
         pchMessageStart[1] = 0x6f;
