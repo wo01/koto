@@ -424,6 +424,11 @@ WalletModel::SendCoinsReturn WalletModel::prepareZTransaction(WalletModelTransac
             total += rcp.amount;
         }
     }
+    if(address.isNull())
+    {
+        return InvalidInputAddress;
+    }
+
     if(setAddress.size() != nAddresses)
     {
         return DuplicateAddress;

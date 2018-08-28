@@ -2634,6 +2634,10 @@
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>ひとつの入力につき %1 satoshi 前後ずれることがあります。</translation>
     </message>
+    <message>
+        <source>The input address is not valid. Please select or recheck.</source>
+        <translation>送信アドレスが不正です。選択するか再チェックしてください。</translation>
+    </message>
 </context>
 <context>
     <name>SendZCoinsEntry</name>
