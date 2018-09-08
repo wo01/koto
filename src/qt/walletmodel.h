@@ -110,6 +110,7 @@ public:
     enum StatusCode // Returned by sendCoins
     {
         OK,
+        InvalidInputAddress,
         InvalidAmount,
         InvalidAddress,
         AmountExceedsBalance,

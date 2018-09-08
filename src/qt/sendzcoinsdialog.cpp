@@ -475,6 +475,9 @@ void SendZCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn
     // all others are used only in WalletModel::prepareTransaction()
     switch(sendCoinsReturn.status)
     {
+    case WalletModel::InvalidInputAddress:
+        msgParams.first = tr("The input address is not valid. Please select or recheck.");
+        break;
     case WalletModel::InvalidAddress:
         msgParams.first = tr("The recipient address is not valid. Please recheck.");
         break;
