@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>New &amp;Private Address</source>
-        <translation>新規プライベートアドレスの生成 (&amp;P)</translation>
+        <translation>新規匿名アドレスの生成 (&amp;P)</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>先のアドレスを選択</translation>
+        <translation>送信先のアドレスを選択</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
@@ -29,11 +29,11 @@
     </message>
     <message>
         <source>Sending z-addresses</source>
-        <translation>zアドレスで送信</translation>
+        <translation>匿名アドレスで送信</translation>
     </message>
     <message>
         <source>Receiving z-addresses</source>
-        <translation>zアドレスで受信</translation>
+        <translation>匿名アドレスで受信</translation>
     </message>
     <message>
         <source>These are your Koto addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
@@ -132,11 +132,11 @@
     </message>
     <message>
         <source>New &amp;Private Address</source>
-        <translation>新規プライベートアドレスの作成 (&amp;P)</translation>
+        <translation>新規匿名アドレスの作成 (&amp;P)</translation>
     </message>
     <message>
         <source>These are your transparent addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>これらは、支払いを受け取るためのあなたの公開されたアドレスです。各トランザクションに新しい受信アドレスを使用することをお勧めします。</translation>
+        <translation>これらは、支払いを受け取るためのあなたの公開アドレスです。各トランザクションに新しい受信アドレスを使用することをお勧めします。</translation>
     </message>
     <message>
         <source>New &amp;Transparent Address</source>
@@ -590,7 +590,7 @@
     </message>
     <message>
         <source>&amp;Private Payment</source>
-        <translation>プライベート送金 (&amp;P)</translation>
+        <translation>匿名送金 (&amp;P)</translation>
     </message>
     <message>
         <source>Send coins to a Koto address using private transacions</source>
@@ -649,7 +649,7 @@
     </message>
     <message>
         <source>Change:</source>
-        <translation>釣り銭:</translation>
+        <translation>おつり:</translation>
     </message>
     <message>
         <source>(un)select all</source>
@@ -741,7 +741,7 @@
     </message>
     <message>
         <source>Copy change</source>
-        <translation>釣り銭をコピー</translation>
+        <translation>おつりをコピー</translation>
     </message>
     <message>
         <source>highest</source>
@@ -1408,7 +1408,7 @@
     </message>
     <message>
         <source>Z-Address:</source>
-        <translation>Zアドレス:</translation>
+        <translation>匿名アドレス:</translation>
     </message>
     <message>
         <source>Your current T-balance</source>
@@ -1416,7 +1416,7 @@
     </message>
     <message>
         <source>Unshielded balance that must be tranfer to z-addr before could be spent</source>
-        <translation>Zアドレスに転送しなければならない未保護残高</translation>
+        <translation>匿名アドレスに転送しなければならない非保護残高</translation>
     </message>
     <message>
         <source>T-Address:</source>
@@ -1424,11 +1424,11 @@
     </message>
     <message>
         <source>Your current Z-balance</source>
-        <translation>あなたの現在のZアドレス残高</translation>
+        <translation>あなたの現在の匿名アドレス残高</translation>
     </message>
     <message>
         <source>Shield coinbase into z-address</source>
-        <translation>Zアドレスの保護コインベース</translation>
+        <translation>匿名アドレスの保護コインベース</translation>
     </message>
     <message>
         <source>&amp;Shield coinbase</source>
@@ -2153,7 +2153,7 @@
     </message>
     <message>
         <source>Dust:</source>
-        <translation>ダスト：</translation>
+        <translation>ダスト:</translation>
     </message>
     <message>
         <source>After Fee:</source>
@@ -2161,7 +2161,7 @@
     </message>
     <message>
         <source>Change:</source>
-        <translation>釣り銭:</translation>
+        <translation>おつり:</translation>
     </message>
     <message>
         <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
@@ -2209,11 +2209,11 @@
     </message>
     <message>
         <source>Recommended:</source>
-        <translation>推奨：</translation>
+        <translation>推奨:</translation>
     </message>
     <message>
         <source>Custom:</source>
-        <translation>カスタム：</translation>
+        <translation>カスタム:</translation>
     </message>
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
@@ -2221,7 +2221,7 @@
     </message>
     <message>
         <source>Confirmation time:</source>
-        <translation>検証時間：</translation>
+        <translation>検証時間:</translation>
     </message>
     <message>
         <source>normal</source>
@@ -2261,7 +2261,7 @@
     </message>
     <message>
         <source>This is the total balance available to be spent. It&apos;s calculate adding balances in private and trasparent addresses minus transaction still in the coinbase that must be shielded before using them.</source>
-        <translation>これは、使用可能な合計残高です。プライベートと公開アドレスの残高を差し引いてコインベースのトランザクションを差し引いて計算し、それを使用する前に保護する必要があります。</translation>
+        <translation>これは、使用可能な合計残高です。匿名アドレスと公開アドレスの残高を差し引いてコインベースのトランザクションを差し引いて計算し、それを使用する前に保護する必要があります。</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -2293,7 +2293,7 @@
     </message>
     <message>
         <source>Copy change</source>
-        <translation>釣り銭をコピー</translation>
+        <translation>おつりをコピー</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -2309,7 +2309,7 @@
     </message>
     <message>
         <source>Total Amount %1</source>
-        <translation>合計：　%1</translation>
+        <translation>合計：%1</translation>
     </message>
     <message>
         <source>or</source>
@@ -2492,7 +2492,7 @@
     </message>
     <message>
         <source>Change:</source>
-        <translation>釣り銭:</translation>
+        <translation>おつり:</translation>
     </message>
     <message>
         <source>Dust:</source>
@@ -2536,7 +2536,7 @@
     </message>
     <message>
         <source>This is the total balance available to be spent. It&apos;s calculate adding balances in private and trasparent addresses minus transaction still in the coinbase that must be shielded before using them.</source>
-        <translation>これは、使用可能な合計残高です。プライベートと公開アドレスの残高を差し引いてコインベースのトランザクションを差し引いて計算し、それを使用する前に保護する必要があります。</translation>
+        <translation>これは、使用可能な合計残高です。匿名アドレスと公開アドレスの残高を差し引いてコインベースのトランザクションを差し引いて計算し、それを使用する前に保護する必要があります。</translation>
     </message>
     <message>
         <source>Copy amount</source>
@@ -2556,7 +2556,7 @@
     </message>
     <message>
         <source>Copy change</source>
-        <translation>釣り銭をコピー</translation>
+        <translation>おつりをコピー</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -2695,7 +2695,7 @@
     </message>
     <message>
         <source>S&amp;end to z-address</source>
-        <translation>Zアドレスへ送信 (&amp;S)</translation>
+        <translation>匿名アドレスへ送信 (&amp;S)</translation>
     </message>
     <message>
         <source>This is an unauthenticated payment request.</source>
@@ -2733,7 +2733,7 @@
     </message>
     <message>
         <source>Z-Address:</source>
-        <translation>Zアドレス:</translation>
+        <translation>匿名アドレス:</translation>
     </message>
     <message>
         <source>Pick a private address from the address book.</source>
@@ -2753,7 +2753,7 @@
     </message>
     <message>
         <source>Use this form to shield transparent coinbase funds by sending to a shielded z-address.</source>
-        <translation>保護されたZアドレスに送信することにより、公開されたコインベースの資金を保護するためにこのフォームを使用してください。</translation>
+        <translation>保護された匿名アドレスに送信することにより、公開されたコインベースの資金を保護するためにこのフォームを使用してください。</translation>
     </message>
     <message>
         <source>Fee</source>
@@ -3218,7 +3218,7 @@
     </message>
     <message>
         <source>(no label)</source>
-        <translation>（ラベル無し）</translation>
+        <translation>(ラベル無し)</translation>
     </message>
     <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
@@ -3654,7 +3654,7 @@
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
-        <translation>ポートのリスンに失敗しました。必要であれば -listen=0 を使用してください。</translation>
+        <translation>ポートのリッスンに失敗しました。必要であれば -listen=0 を使用してください。</translation>
     </message>
     <message>
         <source>Importing...</source>
@@ -4178,7 +4178,7 @@
     </message>
     <message>
         <source>Insufficient funds, coinbase funds can only be spent after they have been sent to a zaddr</source>
-        <translation>不十分な資金、コインベースの資金は、Zアドレスに送った後にのみ費やすことができます</translation>
+        <translation>不十分な資金、コインベースの資金は、匿名アドレスに送った後にのみ費やすことができます</translation>
     </message>
     <message>
         <source>Invalid address for -mineraddress=&lt;addr&gt;: &apos;%s&apos; (must be a transparent address)</source>
@@ -4286,7 +4286,7 @@
     </message>
     <message>
         <source>[DEPRECATED FROM OVERWINTER] Set the maximum number of transparent inputs in a transaction that the mempool will accept (default: 0 = no limit applied)</source>
-        <translation>[OVERWINTERにて廃止] mempoolが受け入れるトランザクションの公開入力の最大数を設定する (デフォルト: 0 = 制限なし)</translation>
+        <translation>[OVERWINTERにて廃止] mempoolが受け入れるトランザクションの公開された入力の最大数を設定する (デフォルト: 0 = 制限なし)</translation>
     </message>
     <message>
         <source>%d days, %d hours, %d minutes, %d seconds</source>
@@ -4350,7 +4350,7 @@
     </message>
     <message>
         <source>Coinbase funds can only be sent to a zaddr</source>
-        <translation>コインベースの資金はZアドレスにのみ送ることができます</translation>
+        <translation>コインベースの資金は匿名アドレスにのみ送ることができます</translation>
     </message>
     <message>
         <source>Connections</source>
