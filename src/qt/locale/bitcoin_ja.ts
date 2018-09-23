@@ -128,7 +128,7 @@
     </message>
     <message>
         <source>These are your Koto private addresses for shielding coins.</source>
-        <translation>コインを保護するためのKotoのプライベートアドレスです。</translation>
+        <translation>コインを保護するためのKotoの匿名アドレスです。</translation>
     </message>
     <message>
         <source>New &amp;Private Address</source>
@@ -594,7 +594,7 @@
     </message>
     <message>
         <source>Send coins to a Koto address using private transacions</source>
-        <translation>プライベートなトランザクションを使用してKotoアドレスにコインを送る</translation>
+        <translation>匿名なトランザクションを使用してKotoアドレスにコインを送る</translation>
     </message>
     <message>
         <source>&amp;Unspent</source>
@@ -2737,7 +2737,7 @@
     </message>
     <message>
         <source>Pick a private address from the address book.</source>
-        <translation>アドレスブックからプライベートアドレスを選択します。</translation>
+        <translation>アドレスブックから匿名アドレスを選択します。</translation>
     </message>
     <message>
         <source>Choose new or previously used address</source>
@@ -3423,7 +3423,7 @@
     </message>
     <message>
         <source>Unspent private transaction list:</source>
-        <translation>未使用のプライベートトランザクションリスト:</translation>
+        <translation>未使用の匿名トランザクションリスト:</translation>
     </message>
     <message>
         <source>Unspent transactions list</source>
