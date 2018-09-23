@@ -16,8 +16,8 @@
 #include "bantablemodel.h"
 
 #include "chainparams.h"
-#include "rpcserver.h"
-#include "rpcclient.h"
+#include "rpc/server.h"
+#include "rpc/client.h"
 #include "util.h"
 
 #include <openssl/crypto.h>
@@ -586,7 +586,7 @@ void RPCConsole::clear(bool clearHistory)
         );
 
 #ifdef Q_OS_MAC
-    QString clsKey = "(⌘)-L";
+    QString clsKey = "(?)-L";
 #else
     QString clsKey = "Ctrl-L";
 #endif
