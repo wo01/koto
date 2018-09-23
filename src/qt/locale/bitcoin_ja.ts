@@ -1412,7 +1412,7 @@
     </message>
     <message>
         <source>Your current T-balance</source>
-        <translation>あなたの現在のTアドレス残高</translation>
+        <translation>あなたの現在の公開アドレス残高</translation>
     </message>
     <message>
         <source>Unshielded balance that must be tranfer to z-addr before could be spent</source>
@@ -1420,7 +1420,7 @@
     </message>
     <message>
         <source>T-Address:</source>
-        <translation>Tアドレス:</translation>
+        <translation>公開アドレス:</translation>
     </message>
     <message>
         <source>Your current Z-balance</source>
