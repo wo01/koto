@@ -19,7 +19,7 @@
 #include "platformstyle.h"
 #include "walletmodel.h"
 #include <univalue.h>
-#include "rpc/server.h"
+#include "rpcserver.h"
 
 #include <sstream>
 #include <iomanip>

@@ -16,8 +16,8 @@
 #include "bantablemodel.h"
 
 #include "chainparams.h"
-#include "rpc/server.h"
-#include "rpc/client.h"
+#include "rpcserver.h"
+#include "rpcclient.h"
 #include "util.h"
 
 #include <openssl/crypto.h>

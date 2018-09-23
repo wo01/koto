@@ -125,9 +125,9 @@ public:
             int nMaxDepth = 9999999;
 
             std::set<libzcash::SproutPaymentAddress> addresses;
-            wallet->GetSproutPaymentAddresses(addresses);
+            wallet->GetPaymentAddresses(addresses);
             for (auto addr : addresses ) {
-                if (wallet->HaveSproutSpendingKey(addr)) {
+                if (wallet->HaveSpendingKey(addr)) {
                     zaddrs.insert(addr);
                 }
             }

@@ -103,12 +103,12 @@ public:
 
             // Shielded address
             std::set<libzcash::SproutPaymentAddress> addresses;
-            wallet->GetSproutPaymentAddresses(addresses);
+            wallet->GetPaymentAddresses(addresses);
             for (auto addr : addresses ) {
                 AddressTableEntry::Type addressType = translateTransactionType(
                         QString::fromStdString("zreceive"), true);
                 const std::string& strName = "";
-                if (wallet->HaveSproutSpendingKey(addr)) {
+                if (wallet->HaveSpendingKey(addr)) {
                     cachedAddressTable.append(AddressTableEntry(addressType,
                                       QString::fromStdString(strName),
                                       QString::fromStdString(EncodePaymentAddress(addr))));

@@ -11,7 +11,7 @@
 #include "platformstyle.h"
 
 #include <univalue.h>
-#include "rpc/server.h"
+#include "rpcserver.h"
 
 #include <QTimer>
 #include <QMessageBox>
