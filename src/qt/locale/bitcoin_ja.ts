@@ -2781,7 +2781,7 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation>cancel</translation>
+        <translation>キャンセル</translation>
     </message>
 </context>
 <context>
