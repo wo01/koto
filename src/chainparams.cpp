@@ -109,7 +109,7 @@ public:
             Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000281b32ff3198a1");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000923084b2fcff");
 
         /**
          * The message start string should be awesome! ⓩ❤
@@ -222,7 +222,7 @@ public:
 	    Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000000001d0c4d9cd");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000072c3a6f1");
 
         pchMessageStart[0] = 0x54;
         pchMessageStart[1] = 0x6f;
