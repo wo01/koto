@@ -117,6 +117,7 @@ UniValue TxJoinSplitToJSON(const CTransaction& tx) {
 void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
 {
     entry.push_back(Pair("txid", tx.GetHash().GetHex()));
+    entry.push_back(Pair("hash", tx.GetScriptSigHash().GetHex()));
     entry.push_back(Pair("overwintered", tx.fOverwintered));
     entry.push_back(Pair("version", tx.nVersion));
     if (tx.fOverwintered) {
@@ -363,7 +364,7 @@ UniValue gettxoutproof(const UniValue& params, bool fHelp)
 
     unsigned int ntxFound = 0;
     BOOST_FOREACH(const CTransaction&tx, block.vtx)
-        if (setTxids.count(tx.GetHash()))
+        if (setTxids.count(tx.GetScriptSigHash()))
             ntxFound++;
     if (ntxFound != setTxids.size())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "(Not all) transactions not found in specified block");
